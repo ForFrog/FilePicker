@@ -31,16 +31,22 @@ public final class SelectCreator {
         if (activity == null) {
             return;
         }
+
         Intent intent = new Intent();
-        if (SelectCreator.this.chooseType.equals(SelectOptions.CHOOSE_TYPE_BROWSER)) {
-            intent.setClass(activity, SelectFileByBrowserActivity.class);
-        } else if (SelectCreator.this.chooseType.equals(SelectOptions.CHOOSE_TYPE_SCAN)) {
-            intent.setClass(activity, SelectFileByScanActivity.class);
-        } else if (SelectCreator.this.chooseType.equals(SelectOptions.CHOOSE_TYPE_MEDIA)) {
-            intent.setClass(activity, SelectPictureActivity.class);
-        } else {
-            return;
+        switch (SelectCreator.this.chooseType) {
+            case SelectOptions.CHOOSE_TYPE_BROWSER:
+                intent.setClass(activity, SelectFileByBrowserActivity.class);
+                break;
+            case SelectOptions.CHOOSE_TYPE_SCAN:
+                intent.setClass(activity, SelectFileByScanActivity.class);
+                break;
+            case SelectOptions.CHOOSE_TYPE_MEDIA:
+                intent.setClass(activity, SelectPictureActivity.class);
+                break;
+            default:
+                return;
         }
+
         Fragment fragment = filePicker.getFragment();
         if (fragment != null) {
             fragment.startActivityForResult(intent, selectOptions.request_code);
