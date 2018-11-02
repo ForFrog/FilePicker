@@ -18,6 +18,9 @@ public abstract class BaseFileFragment extends Fragment {
     protected Fragment mFragment = null;
     protected FragmentManager mFManager = null;
 
+    protected boolean isVisible; //是否可见的标志
+    protected boolean isPrepared = false; //是否已经准备好
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -32,8 +35,19 @@ public abstract class BaseFileFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(getFragmentLayout(), container, false);
         initView(view);
-
+        onVisible();
         return view;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (getUserVisibleHint()) {
+            isVisible = true;
+            onVisible();
+        } else {
+            isVisible = false;
+        }
     }
 
     @Override
@@ -51,14 +65,30 @@ public abstract class BaseFileFragment extends Fragment {
     }
 
     /**
+     * 可见的时候
+     */
+    private void onVisible() {
+        if (isVisible && isPrepared) {
+            lazyLoad();
+        }
+    }
+
+    /**
      * fragment布局文件
      */
     public abstract int getFragmentLayout();
 
     /**
+     * 延迟加载
+     */
+    protected abstract void lazyLoad();
+
+    /**
      * 初始化控件
+     *
      * @param view
      */
     protected void initView(View view) {
+        isPrepared = true;
     }
 }
